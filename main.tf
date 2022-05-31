@@ -25,7 +25,7 @@ resource "google_pubsub_topic" "postgres-log-sink" {
   kms_key_name = local.kms_key_self_generated
   message_storage_policy {
     allowed_persistence_regions = [
-      "europe-west2, 
+      var.region, 
       ]
     }
   dynamic "schema_settings" {
