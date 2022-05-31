@@ -67,7 +67,7 @@ resource "google_pubsub_topic_iam_member" "postgres-log-writer" {
   topic   = google_pubsub_topic.postgres-log-sink[0].id
   role    = "roles/pubsub.publisher"
   member  = [
-    google_logging_organization_sink.postgres-sink.writer_identity
+    google_logging_organization_sink.postgres-sink.writer_identity,
   ]
   depends_on = [
     google_logging_organization_sink.postgres-sink,google_pubsub_topic.postgres-log-sink
