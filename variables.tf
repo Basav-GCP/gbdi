@@ -49,11 +49,6 @@ variable "subscription_labels" {
   default     = {}
 }
 
-variable "message_storage_policy" {
-  type        = map(any)
-  description = "A map of storage policies. Default - inherit from organization's Resource Location Restriction policy."
-}
-
 variable "topic_kms_key_name" {
   type        = string
   description = "The resource name of the Cloud KMS CryptoKey to be used to protect access to messages published on this topic."
