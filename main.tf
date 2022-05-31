@@ -78,7 +78,7 @@ resource "google_pubsub_subscription_iam_member" "postgres-log-subscription-read
   project      = var.project_id
   subscription = each.value.name
   role         = "roles/pubsub.subscriber"
-  member       = "serviceAccount:${var.impervasa}"
+  member       = "serviceAccount:${var.service_account}"
   depends_on = [
     google_pubsub_subscription.postgres-log-subscription
   ]
