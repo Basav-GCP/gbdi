@@ -7,6 +7,10 @@ variable "project_id" {
   type        = string
   description = "The project ID to manage the Pub/Sub resources"
 }
+variable "region" {
+  type        = string
+  description = "The region for the Pub/Sub resources"
+}
 variable "service_account" {
   type = string
   description = "imperva service account to read logs from pubsub topic"
