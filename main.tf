@@ -1,3 +1,10 @@
+# define locals
+locals {
+
+  kms_key_self_generated="projects/hsbc-6320774-${var.env}/locations/global/keyRings/pubSub/cryptoKeys/pubSub"  
+
+}
+
 # setup pubsub topic and subscription for postgres
 # define schema - if message formating is required.
 resource "google_pubsub_schema" "schema" {
@@ -13,7 +20,7 @@ resource "google_pubsub_topic" "postgres-log-sink" {
   project      = var.project_id
   name         = var.topic
   labels       = var.topic_labels
-  kms_key_name = var.topic_kms_key_name
+  kms_key_name = local.kms_key_self_generated
   dynamic "message_storage_policy" {
     for_each = var.message_storage_policy
     content {
@@ -68,7 +75,7 @@ resource "google_pubsub_topic_iam_member" "postgres-log-writer" {
     google_logging_organization_sink.postgres-sink,google_pubsub_topic.postgres-log-sink
   ]
 }
-resource "google_pubsub_subscription_iam_member" "postgres-log-subscription" {
+resource "google_pubsub_subscription_iam_member" "postgres-log-subscription-reader" {
   for_each     = var.create_subscriptions ? { for i in var.pull_subscriptions : i.name => i } : {}
   project      = var.project_id
   subscription = each.value.name
