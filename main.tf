@@ -22,7 +22,7 @@ resource "google_pubsub_topic" "postgres-log-sink" {
   project      = var.project_id
   name         = var.topic
   labels       = var.topic_labels
-  kms_key_name = local.kms_key_self_generated
+  #kms_key_name = local.kms_key_self_generated
   message_storage_policy {
     allowed_persistence_regions = [
       var.region, 
