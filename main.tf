@@ -42,7 +42,7 @@ resource "google_logging_organization_sink" "postgres-sink" {
   # folder name
   # folder = google_folder.prod-folder.name
   # Can export to pubsub, cloud storage, or bigquery
-  destination = "google_pubsub_topic.postgres-log-sink[count.index]"
+  destination = "google_pubsub_topic.postgres-log-sink[0].id"
   include_children = true
   # Log all WARN or higher severity messages relating to instances
   filter = "resource.type = gce_instance AND severity >= WARNING"
@@ -54,7 +54,7 @@ resource "google_logging_organization_sink" "postgres-sink" {
 resource "google_pubsub_subscription" "postgres-log-subscription" {
   for_each = var.create_subscriptions ? { for i in var.pull_subscriptions : i.name => i } : {}
   name    = each.value.name
-  topic   = google_pubsub_topic.postgres-log-sink[count.index]
+  topic   = google_pubsub_topic.postgres-log-sink[0].id
   project = var.project_id
   labels  = var.subscription_labels
   message_retention_duration = "86400s"
@@ -64,7 +64,7 @@ resource "google_pubsub_subscription" "postgres-log-subscription" {
 }
 resource "google_pubsub_topic_iam_member" "postgres-log-writer" {
   project = var.project_id
-  topic   = google_pubsub_topic.postgres-log-sink[count.index]
+  topic   = google_pubsub_topic.postgres-log-sink[0].id
   role    = "roles/pubsub.publisher"
   member  = [
     google_logging_organization_sink.postgres-sink.writer_identity
