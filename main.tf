@@ -64,7 +64,7 @@ resource "google_pubsub_subscription" "postgres-log-subscription" {
 }
 resource "google_pubsub_topic_iam_member" "postgres-log-writer" {
   project = var.project_id
-  topic   = google_pubsub_topic.postgres-log-sink.id
+  topic   = google_pubsub_topic.postgres-log-sink[count.index]
   role    = "roles/pubsub.publisher"
   member  = [
     google_logging_organization_sink.postgres-sink.writer_identity
