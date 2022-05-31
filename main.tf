@@ -1,3 +1,7 @@
+# terraform version
+terraform {
+  required_version = ">=0.12.0"
+}
 # define locals
 locals {
   kms_key_self_generated="projects/hsbc-6320774-${var.env}/locations/global/keyRings/pubSub/cryptoKeys/pubSub"  
