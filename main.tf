@@ -1,8 +1,6 @@
 # define locals
 locals {
-
   kms_key_self_generated="projects/hsbc-6320774-${var.env}/locations/global/keyRings/pubSub/cryptoKeys/pubSub"  
-
 }
 
 # setup pubsub topic and subscription for postgres
@@ -44,7 +42,7 @@ resource "google_logging_organization_sink" "postgres-sink" {
   # folder name
   # folder = google_folder.prod-folder.name
   # Can export to pubsub, cloud storage, or bigquery
-  destination = "google_pubsub_topic.postgres-log-sink.id"
+  destination = "google_pubsub_topic.postgres-log-sink[count.index]"
   include_children = true
   # Log all WARN or higher severity messages relating to instances
   filter = "resource.type = gce_instance AND severity >= WARNING"
@@ -56,7 +54,7 @@ resource "google_logging_organization_sink" "postgres-sink" {
 resource "google_pubsub_subscription" "postgres-log-subscription" {
   for_each = var.create_subscriptions ? { for i in var.pull_subscriptions : i.name => i } : {}
   name    = each.value.name
-  topic   = google_pubsub_topic.postgres-log-sink.id
+  topic   = google_pubsub_topic.postgres-log-sink[count.index]
   project = var.project_id
   labels  = var.subscription_labels
   message_retention_duration = "86400s"
