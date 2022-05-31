@@ -23,12 +23,11 @@ resource "google_pubsub_topic" "postgres-log-sink" {
   name         = var.topic
   labels       = var.topic_labels
   kms_key_name = local.kms_key_self_generated
-  dynamic "message_storage_policy" {
-    for_each = var.message_storage_policy
-    content {
-      allowed_persistence_regions = message_storage_policy.key == "allowed_persistence_regions" ? message_storage_policy.value : null
+  message_storage_policy {
+    allowed_persistence_regions = [
+      "europe-west2, 
+      ]
     }
-  }
   dynamic "schema_settings" {
     for_each = var.schema != null ? [var.schema] : []
     content {
